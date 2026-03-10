@@ -1,0 +1,168 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.brainhu.kirogui</id>
+    <name>Kiro-GUI</name>
+    <version>0.1.0</version>
+    <vendor>brainhu</vendor>
+
+    <description><![CDATA[
+        Integrates Kiro AI assistant capabilities into JetBrains IDEs.
+        Provides Chat interaction, Spec-driven development workflow, Hook automation,
+        and Steering configuration for AI-assisted development.
+    ]]></description>
+
+    <!-- Minimum platform version -->
+    <idea-version since-build="233"/>
+
+    <!-- Platform dependency for all IntelliJ-based IDEs -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Auth Service - application-level - Requirements 8.1, 8.2, 8.3, 8.4 -->
+        <applicationService
+                serviceImplementation="com.github.brainhu.kirogui.service.AuthServiceImpl"/>
+
+        <!-- LSP Client Service - project-level - Requirements 4.1, 4.2, 4.3, 4.4, 4.5, 4.6 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.KiroLspClientImpl"/>
+
+        <!-- Chat Service - project-level - Requirements 2.2, 2.6, 1.4 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.ChatServiceImpl"/>
+
+        <!-- Context Service - project-level - Requirements 7.2, 2.7 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.ContextServiceImpl"/>
+
+        <!-- Spec Service - project-level - Requirements 3.1, 3.2, 3.3, 3.5, 3.6 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.SpecServiceImpl"/>
+
+        <!-- Hook Service - project-level - Requirements 5.1, 5.2, 5.3, 5.4, 5.5 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.HookServiceImpl"/>
+
+        <!-- Steering Service - project-level - Requirements 6.1, 6.2, 6.4 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.service.SteeringServiceImpl"/>
+
+        <!-- Plugin Disposable - project-level - Requirements 1.4 -->
+        <projectService
+                serviceImplementation="com.github.brainhu.kirogui.KiroPluginDisposable"/>
+
+        <!-- Plugin Initializer (ProjectActivity) - Requirements 1.1 -->
+        <postStartupActivity
+                implementation="com.github.brainhu.kirogui.KiroPluginInitializer"/>
+
+        <!-- Chat Tool Window - right side panel - Requirements 2.1 -->
+        <toolWindow
+                id="Kiro Chat"
+                anchor="right"
+                factoryClass="com.github.brainhu.kirogui.ui.ChatToolWindowFactory"
+                icon="AllIcons.Actions.Chat"/>
+
+        <!-- Spec Tool Window - bottom panel - Requirements 3.1 -->
+        <toolWindow
+                id="Kiro Specs"
+                anchor="bottom"
+                factoryClass="com.github.brainhu.kirogui.ui.SpecToolWindowFactory"
+                icon="AllIcons.Actions.ListFiles"/>
+
+        <!-- Hook Tool Window - bottom panel - Requirements 5.4 -->
+        <toolWindow
+                id="Kiro Hooks"
+                anchor="bottom"
+                factoryClass="com.github.brainhu.kirogui.ui.HookToolWindowFactory"
+                icon="AllIcons.Actions.Lightning"/>
+
+        <!-- Steering Tool Window - bottom panel - Requirements 6.2 -->
+        <toolWindow
+                id="Kiro Steering"
+                anchor="bottom"
+                factoryClass="com.github.brainhu.kirogui.ui.SteeringToolWindowFactory"
+                icon="AllIcons.General.Settings"/>
+
+        <!-- Status Bar Widget Factory - Requirements 4.4, 8.5 -->
+        <statusBarWidgetFactory
+                id="KiroStatusBarWidget"
+                implementation="com.github.brainhu.kirogui.ui.KiroStatusBarWidgetFactory"/>
+
+        <!-- Notification Group for Kiro notifications (hooks, errors, etc.) -->
+        <notificationGroup
+                id="Kiro"
+                displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <!-- Editor Context Menu Action Group - Requirements 7.1, 7.3 -->
+        <group
+                id="Kiro.EditorContextMenu"
+                text="Kiro"
+                popup="true">
+
+            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="EditorPopupMenu.Run"/>
+
+            <!-- Explain Code - Ctrl+K E -->
+            <action
+                    id="Kiro.ExplainCode"
+                    class="com.github.brainhu.kirogui.actions.ExplainCodeAction"
+                    text="Explain Code"
+                    description="Ask Kiro to explain the selected code">
+                <keyboard-shortcut
+                        first-keystroke="control K"
+                        second-keystroke="E"
+                        keymap="$default"/>
+            </action>
+
+            <!-- Refactor Suggestion - Ctrl+K R -->
+            <action
+                    id="Kiro.RefactorSuggestion"
+                    class="com.github.brainhu.kirogui.actions.RefactorSuggestionAction"
+                    text="Refactor Suggestion"
+                    description="Ask Kiro for refactoring suggestions">
+                <keyboard-shortcut
+                        first-keystroke="control K"
+                        second-keystroke="R"
+                        keymap="$default"/>
+            </action>
+
+            <!-- Generate Test - Ctrl+K T -->
+            <action
+                    id="Kiro.GenerateTest"
+                    class="com.github.brainhu.kirogui.actions.GenerateTestAction"
+                    text="Generate Test"
+                    description="Ask Kiro to generate tests for the selected code">
+                <keyboard-shortcut
+                        first-keystroke="control K"
+                        second-keystroke="T"
+                        keymap="$default"/>
+            </action>
+
+            <!-- Add Comment - Ctrl+K C -->
+            <action
+                    id="Kiro.AddComment"
+                    class="com.github.brainhu.kirogui.actions.AddCommentAction"
+                    text="Add Comment"
+                    description="Ask Kiro to add comments to the selected code">
+                <keyboard-shortcut
+                        first-keystroke="control K"
+                        second-keystroke="C"
+                        keymap="$default"/>
+            </action>
+
+            <separator/>
+
+            <!-- Send to Chat - Ctrl+K K -->
+            <action
+                    id="Kiro.SendToChat"
+                    class="com.github.brainhu.kirogui.actions.SendToChatAction"
+                    text="Send to Chat"
+                    description="Send the selected code to Kiro Chat panel">
+                <keyboard-shortcut
+                        first-keystroke="control K"
+                        second-keystroke="K"
+                        keymap="$default"/>
+            </action>
+        </group>
+    </actions>
+</idea-plugin>

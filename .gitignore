@@ -1,0 +1,41 @@
+# Compiled output
+build/
+out/
+
+# Gradle
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ Platform Gradle Plugin
+.intellijPlatform/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Kotlin
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Distribution
+build/distributions/
+
+/.claude/
+/ai-coding/
+/.qoder/
+/AGENTS.md
+/CLAUDE.md
+/nul
+.kiro/
+.vscode/
+
+

@@ -1,0 +1,30 @@
+[versions]
+# libraries
+junit = "5.10.2"
+lsp4j = "0.21.2"
+kotlinxSerialization = "1.6.3"
+kotestProperty = "5.8.1"
+kotlinCoroutines = "1.8.0"
+commonmark = "0.21.0"
+
+# plugins
+intelliJPlatform = "2.5.0"
+kotlin = "1.9.25"
+kotlinSerialization = "1.9.25"
+
+[libraries]
+junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit" }
+lsp4j = { group = "org.eclipse.lsp4j", name = "org.eclipse.lsp4j", version.ref = "lsp4j" }
+lsp4j-jsonrpc = { group = "org.eclipse.lsp4j", name = "org.eclipse.lsp4j.jsonrpc", version.ref = "lsp4j" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotestProperty" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotestProperty" }
+commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "commonmark" }
+
+[plugins]
+intelliJPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intelliJPlatform" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
