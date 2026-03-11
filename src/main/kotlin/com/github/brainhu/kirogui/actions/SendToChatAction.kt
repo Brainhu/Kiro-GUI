@@ -2,9 +2,12 @@ package com.github.brainhu.kirogui.actions
 
 import com.github.brainhu.kirogui.service.ChatService
 import com.github.brainhu.kirogui.service.ContextService
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.components.service
 import com.intellij.openapi.wm.ToolWindowManager
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +23,10 @@ import kotlinx.coroutines.launch
  */
 class SendToChatAction : AnAction() {
     private val scope = CoroutineScope(Dispatchers.Main)
+    
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
     
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
@@ -55,7 +62,36 @@ class SendToChatAction : AnAction() {
             
             // Send message asynchronously
             scope.launch {
-                chatService.sendMessage(session.id, message, context)
+                try {
+                    chatService.sendMessage(session.id, message, context)
+                    
+                    NotificationGroupManager.getInstance()
+                        .getNotificationGroup("Kiro")
+                        .createNotification(
+                            "Kiro",
+                            "Code sent to Chat panel.",
+                            NotificationType.INFORMATION
+                        )
+                        .notify(project)
+                } catch (e: IllegalStateException) {
+                    NotificationGroupManager.getInstance()
+                        .getNotificationGroup("Kiro")
+                        .createNotification(
+                            "Kiro LSP Server Not Connected",
+                            "Please ensure the Kiro LSP server is running and connected.",
+                            NotificationType.WARNING
+                        )
+                        .notify(project)
+                } catch (e: Exception) {
+                    NotificationGroupManager.getInstance()
+                        .getNotificationGroup("Kiro")
+                        .createNotification(
+                            "Kiro Error",
+                            "Failed to send code: ${e.message}",
+                            NotificationType.ERROR
+                        )
+                        .notify(project)
+                }
             }
         }
     }
