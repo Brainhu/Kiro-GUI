@@ -239,7 +239,7 @@ class HookPanel(private val project: Project) : JBPanel<HookPanel>(BorderLayout(
             row: Int,
             column: Int
         ): Component {
-            isSelected = value as? Boolean ?: false
+            this.isSelected = value as? Boolean ?: false
             return this
         }
     }

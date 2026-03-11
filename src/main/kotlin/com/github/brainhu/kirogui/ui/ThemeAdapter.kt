@@ -34,7 +34,7 @@ class ThemeAdapter {
      * Detects if the current IDE theme is dark.
      */
     fun isDarkTheme(): Boolean {
-        return !UIUtil.isUnderBrightTheme()
+        return JBColor.isBright().not()
     }
     
     /**
